@@ -24,8 +24,8 @@ Extra generators
 
 .. code-block:: python
 
-    >>> from django_data_faker import get_url_with_username
-    >>> get_url_with_username()
+    >>> from django_data_faker import url_with_username
+    >>> url_with_username()
     'http://koeppledner.biz/curtis.lakin'
 
 
@@ -33,8 +33,8 @@ Extra generators
 
 .. code-block:: python
 
-    >>> from django_data_faker import gen_fb_url
-    >>> gen_fb_url()
+    >>> from django_data_faker import facebook_url
+    >>> facebook_url()
     'http://facebook.com/rchristiansen'
 
 
@@ -42,16 +42,16 @@ Extra generators
 
 .. code-block:: python
 
-    >>> from django_data_faker import gen_tw_url
-    >>> gen_tw_url()
+    >>> from django_data_faker import twitter_url
+    >>> twitter_url()
     'http://twitter.com/cummerata.norbert'
 
 **LinkedIn url**
 
 .. code-block:: python
 
-    >>> from django_data_faker import gen_tw_url
-    >>> gen_ln_url()
+    >>> from django_data_faker import linkedin_url
+    >>> linkedin_url()
     'http://linkedin.com/pub/bweimann'
 
 
@@ -75,10 +75,10 @@ Extra generators
 
     # generate avatar placeholder
 
-    from django_data_faker import gen_placeholder_image
+    from django_data_faker import placeholder_image
     from myapp.models import UserProfile
 
-    file_name, file_content = gen_placeholder_image(400, 200)
+    file_name, file_content = placeholder_image(400, 200)
     user = UserProfile.objects.get(id=100)
     user.avatar.save(file_name, file_content)
 

@@ -55,43 +55,60 @@ mommy.Mommy.attr_mapping = {
 
 
 # value generators
-def get_url_with_username(url=None, username=None):
+def url_with_username(url=None, username=None):
     return (url or fake.url()) + (username or fake.userName())
 
 
-def gen_fb_url(username=None):
-    return get_url_with_username('http://facebook.com/', username)
+def facebook_url(username=None):
+    return url_with_username('http://facebook.com/', username)
 
 
-def gen_tw_url(username=None):
-    return get_url_with_username('http://twitter.com/', username)
+def twitter_url(username=None):
+    return url_with_username('http://twitter.com/', username)
 
 
-def gen_ln_url(username=None):
-    return get_url_with_username('http://linkedin.com/pub/', username)
+def linkedin_url(username=None):
+    return url_with_username('http://linkedin.com/pub/', username)
 
 
 def random_file_from_folder(abs_path):
+    '''
+        Random file from given folder as a Django's ContentFile object
+
+        returns file_name, ContentFile object
+    '''
     file_name = choice(os.listdir(abs_path))
     content = ContentFile(open(os.path.join(abs_path, file_name), 'r').read())
     return file_name, content
 
 
-def gen_placeholder_image(width, height, background_color=None,
-                          font_color='#FFFFFF'):
-    ''' Generate image placeholder with text eg. 200x300 '''
+def random_html_color():
+    ''' Random color in HTML notation '''
+
+    return choice([
+        '#7289A6', '#485922', '#A67721', '#D99C2B', '#A64029', '#011640',
+        '#123273', '#1F628C', '#718C0F', '#88A61B', '#69374D', '#232326',
+        '#FF3F94', '#FF483F', '#F89E00', '#9F9F9F', '#7FCD74', '#AE74CD',
+    ])
+
+
+def placeholder_image(width, height, background_color=None,
+                      font_color='#FFFFFF', base_font_size=40, text_margin=20,
+                      font_path=None, image_format='png'):
+    '''
+        Generate image placeholder with text (eg. 200x300)
+        as a Django's ContentFile object
+
+        returns file_name, ContentFile object
+    '''
 
     if background_color is None:
-        background_color = choice([
-            '#7289A6', '#485922', '#A67721', '#D99C2B', '#A64029', '#011640',
-            '#123273', '#1F628C', '#718C0F', '#88A61B', '#69374D', '#232326',
-            '#FF3F94', '#FF483F', '#F89E00', '#9F9F9F', '#7FCD74', '#AE74CD',
-        ])
+        background_color = random_html_color()
 
-    base_font_size = 40
-    text_margin = 20
+
     dir = os.path.dirname(__file__)
-    font_path = os.path.join(dir, 'TTF', 'DejaVuSans.ttf')
+    if font_path is None:
+        font_path = os.path.join(dir, 'TTF', 'DejaVuSans.ttf')
     msg = '%sx%s' % (width, height)
 
     im = Image.new('RGBA', (width, height), background_color)
@@ -110,8 +127,8 @@ def gen_placeholder_image(width, height, background_color=None,
     )
 
     tmp_content = StringIO()
-    im.save(tmp_content, format='png')
+    im.save(tmp_content, format=image_format)
     content = ContentFile(tmp_content)
-    file_name = uuid.uuid4().__str__() + '.png'
+    file_name = uuid.uuid4().__str__() + '.%s' % image_format
 
     return file_name, content
