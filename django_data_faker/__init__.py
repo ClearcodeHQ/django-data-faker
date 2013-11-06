@@ -29,28 +29,14 @@ mommy.default_mapping.update({
 # Value generators based on field name
 mommy.Mommy.attr_mapping = {
     'first_name': fake.firstName,
-    'firstname': fake.firstName,
     'last_name': fake.lastName,
-    'lastname': fake.lastName,
     'username': fake.userName,
-    'login': fake.userName,
-    'nickname': fake.userName,
-    'name': fake.userName,
     'email': fake.email,
-    'email_address': fake.email,
     'phone': fake.phoneNumber,
-    'phone_number': fake.phoneNumber,
-    'phonenumber': fake.phoneNumber,
     'slug': lambda: None,
-    'address': fake.address,
-    'city': fake.city,
-    'zipcode': fake.postcode,
     'state': fake.state,
-    'country': fake.country,
-    'title': fake.sentence,
     'description': fake.text,
     'summary': fake.text,
-    'domain': fake.url,
 }
 
 
