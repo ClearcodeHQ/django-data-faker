@@ -71,14 +71,6 @@ def gen_ln_url(username=None):
     return get_url_with_username('http://linkedin.com/pub/', username)
 
 
-def gen_manager_code():
-    return (fake.companySuffix() + ' ' + str(fake.randomInt()))[:10]
-
-
-def gen_product_name():
-    return fake.company() + choice([' Plan', ' Super', ' Solution'])
-
-
 def random_file_from_folder(abs_path):
     file_name = choice(os.listdir(abs_path))
     content = ContentFile(open(os.path.join(abs_path, file_name), 'r').read())
