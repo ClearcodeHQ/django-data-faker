@@ -15,6 +15,8 @@ To install Django-data-faker you can use pip::
 How to use
 ----------
 
+Random one file from directory
+
 .. code-block:: python
 
     # random avatar
@@ -26,6 +28,8 @@ How to use
     user = UserProfile.objects.get(id=100)
     user.avatar.save(file_name, file_content)
 
+
+Generate image placeholder:
 
 .. code-block:: python
 

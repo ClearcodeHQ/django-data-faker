@@ -1,6 +1,6 @@
 import os
 import uuid
-import tempfile
+from StringIO import StringIO
 from random import choice
 from PIL import Image, ImageDraw, ImageFont
 
@@ -117,9 +117,9 @@ def gen_placeholder_image(width, height, background_color=None,
         ((width - w) / 2, (height - h) / 2), msg, fill=font_color, font=font
     )
 
-    tmp_file = tempfile.TemporaryFile()
-    im.save(tmp_file, format='png')
-    content = ContentFile(tmp_file.read())
+    tmp_content = StringIO()
+    im.save(tmp_content, format='png')
+    content = ContentFile(tmp_content)
     file_name = uuid.uuid4().__str__() + '.png'
 
     return file_name, content

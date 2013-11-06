@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='django-data-faker',
-    version='0.0.1.0',
+    version='0.0.1.2',
     description='Fake-factory to generate test data for Django models via model_mommy recipes.',
     author='Clearcode - The A Room',
     author_email='thearoom@clearcode.cc',
