@@ -20,6 +20,7 @@ import os
 import uuid
 from StringIO import StringIO
 from random import choice
+from django import VERSION
 from PIL import Image, ImageDraw, ImageFont
 
 from model_mommy import mommy
@@ -79,11 +80,13 @@ def random_file_from_folder(abs_path):
     '''
         Random file from given folder as a Django's ContentFile object
 
-        returns file_name, ContentFile object
+        returns ContentFile object
     '''
+    content = open(os.path.join(abs_path, file_name), 'r').read()
+    if VERSION < (1, 4):
+        return ContentFile(content)
     file_name = choice(os.listdir(abs_path))
-    content = ContentFile(open(os.path.join(abs_path, file_name), 'r').read())
-    return file_name, content
+    return ContentFile(content, name=file_name)
 
 
 def random_html_color():
@@ -103,7 +106,7 @@ def placeholder_image(width, height, background_color=None,
         Generate image placeholder with text (eg. 200x300)
         as a Django's ContentFile object
 
-        returns file_name, ContentFile object
+        returns ContentFile object
     '''
 
     if background_color is None:
@@ -132,7 +135,8 @@ def placeholder_image(width, height, background_color=None,
 
     tmp_content = StringIO()
     im.save(tmp_content, format=image_format)
-    content = ContentFile(tmp_content)
-    file_name = uuid.uuid4().__str__() + '.%s' % image_format
 
-    return file_name, content
+    if VERSION < (1, 4):
+        return ContentFile(tmp_content.getvalue())
+    file_name = uuid.uuid4().__str__() + '.%s' % image_format
+    return ContentFile(tmp_content.getvalue(), name=file_name)
