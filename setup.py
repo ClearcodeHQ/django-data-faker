@@ -7,7 +7,7 @@ setup(
     author='Clearcode - The A Room',
     author_email='thearoom@clearcode.cc',
     url='https://github.com/trojkat/django-data-faker',
-    license='MIT',
+    license='Lesser GPL',
     packages=['django_data_faker'],
     install_requires=[
         'Pillow>=2.2.1',
