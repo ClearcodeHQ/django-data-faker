@@ -5,7 +5,7 @@ Fake-factory to generate test data for Django models.
 
 This is a mix of:
 
-* Python Faker - https://github.com/deepthawtz/faker
+* Python Faker - https://github.com/joke2k/faker
 * Model Mommy - https://github.com/vandersonmota/model_mommy
 
 
