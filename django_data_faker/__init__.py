@@ -110,8 +110,8 @@ def placeholder_image(width, height, background_color=None,
         background_color = random_html_color()
 
 
-    dir = os.path.dirname(__file__)
     if font_path is None:
+        dir = os.path.abspath(os.path.dirname(__file__))
         font_path = os.path.join(dir, 'TTF', 'DejaVuSans.ttf')
     msg = '%sx%s' % (width, height)
 
