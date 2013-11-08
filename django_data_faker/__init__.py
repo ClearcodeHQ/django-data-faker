@@ -82,6 +82,7 @@ def random_file_from_folder(abs_path):
 
         returns ContentFile object
     '''
+    file_name = choice(os.listdir(abs_path))
     content = open(os.path.join(abs_path, file_name), 'r').read()
     if VERSION < (1, 4):
         return ContentFile(content)
@@ -111,7 +112,6 @@ def placeholder_image(width, height, background_color=None,
 
     if background_color is None:
         background_color = random_html_color()
-
 
     if font_path is None:
         dir = os.path.abspath(os.path.dirname(__file__))
