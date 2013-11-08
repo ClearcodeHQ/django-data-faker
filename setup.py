@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='django-data-faker',
-    version='0.0.1.2',
+    version='0.0.1.4',
     description='Fake-factory to generate test data for Django models via model_mommy recipes.',
     author='Clearcode - The A Room',
     author_email='thearoom@clearcode.cc',
@@ -12,7 +12,7 @@ setup(
     install_requires=[
         'Pillow>=2.2.1',
         'Django>=1.1',
-        'model-mommy==1.1',
+        'model-mommy==1.2',
         'fake-factory==0.2',
     ],
     include_package_data=True,
