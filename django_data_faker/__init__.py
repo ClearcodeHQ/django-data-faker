@@ -24,7 +24,8 @@ from django import VERSION
 from PIL import Image, ImageDraw, ImageFont
 
 from model_mommy import mommy
-from faker import Factory
+from faker.providers import BaseProvider
+from faker import Faker
 
 from django.core.files.base import ContentFile
 from django.db.models import (
@@ -32,9 +33,103 @@ from django.db.models import (
 )
 
 
-fake = Factory.create()
+###########################################################
+# CUSTOM FAKER GENERATORS
+###########################################################
 
-# Set those mappings according to project needs:
+fake = Faker()
+
+class CustomProvider(BaseProvider):
+
+    # value generators
+    def url_with_username(self, url=None, username=None):
+        return (url or fake.url()) + (username or fake.user_name())
+
+
+    def facebook_url(self, username=None):
+        return url_with_username('http://facebook.com/', username)
+
+
+    def twitter_url(self, username=None):
+        return url_with_username('http://twitter.com/', username)
+
+
+    def linkedin_url(self, username=None):
+        return url_with_username('http://linkedin.com/pub/', username)
+
+
+    def random_file_from_folder(self, abs_path):
+        '''
+            Random file from given folder as a Django's ContentFile object
+
+            returns ContentFile object
+        '''
+        file_name = choice(os.listdir(abs_path))
+        content = open(os.path.join(abs_path, file_name), 'r').read()
+        if VERSION < (1, 4):
+            return ContentFile(content)
+        file_name = choice(os.listdir(abs_path))
+        return ContentFile(content, name=file_name)
+
+
+    def random_html_color(self):
+        ''' Random color in HTML notation '''
+
+        return choice([
+            '#7289A6', '#485922', '#A67721', '#D99C2B', '#A64029', '#011640',
+            '#123273', '#1F628C', '#718C0F', '#88A61B', '#69374D', '#232326',
+            '#FF3F94', '#FF483F', '#F89E00', '#9F9F9F', '#7FCD74', '#AE74CD',
+        ])
+
+
+    def placeholder_image(self, width, height, background_color=None,
+                          font_color='#FFFFFF', base_font_size=40,
+                          text_margin=20, font_path=None, image_format='png'):
+        '''
+            Generate image placeholder with text (eg. 200x300)
+            as a Django's ContentFile object
+
+            returns ContentFile object
+        '''
+
+        if background_color is None:
+            background_color = fake.random_html_color()
+
+        if font_path is None:
+            dir = os.path.abspath(os.path.dirname(__file__))
+            font_path = os.path.join(dir, 'TTF', 'DejaVuSans.ttf')
+        msg = '%sx%s' % (width, height)
+
+        im = Image.new('RGBA', (width, height), background_color)
+        draw = ImageDraw.Draw(im)
+        font = ImageFont.truetype(font_path, base_font_size)
+        w, h = draw.textsize(msg, font=font)
+
+        # adjust the text size to the size of the image
+        while w > width - text_margin or h > height - text_margin:
+            base_font_size -= 2
+            font = ImageFont.truetype(font_path, base_font_size)
+            w, h = draw.textsize(msg, font=font)
+
+        draw.text(
+            ((width - w) / 2, (height - h) / 2), msg, fill=font_color,
+            font=font
+        )
+
+        tmp_content = StringIO()
+        im.save(tmp_content, format=image_format)
+
+        if VERSION < (1, 4):
+            return ContentFile(tmp_content.getvalue())
+        file_name = uuid.uuid4().__str__() + '.%s' % image_format
+        return ContentFile(tmp_content.getvalue(), name=file_name)
+
+fake.add_provider(CustomProvider)
+
+
+###########################################################
+# CUSTOM MOMMY MAPPINGS
+###########################################################
 
 # Value generators based on field type
 mommy.default_mapping.update({
@@ -47,96 +142,13 @@ mommy.default_mapping.update({
 
 # Value generators based on field name
 mommy.Mommy.attr_mapping = {
-    'first_name': fake.firstName,
-    'last_name': fake.lastName,
-    'username': fake.userName,
+    'first_name': fake.first_name,
+    'last_name': fake.last_name,
+    'username': fake.user_name,
     'email': fake.email,
-    'phone': fake.phoneNumber,
+    'phone': fake.phone_number,
     'slug': lambda: None,
     'state': fake.state,
     'description': fake.text,
     'summary': fake.text,
 }
-
-
-# value generators
-def url_with_username(url=None, username=None):
-    return (url or fake.url()) + (username or fake.userName())
-
-
-def facebook_url(username=None):
-    return url_with_username('http://facebook.com/', username)
-
-
-def twitter_url(username=None):
-    return url_with_username('http://twitter.com/', username)
-
-
-def linkedin_url(username=None):
-    return url_with_username('http://linkedin.com/pub/', username)
-
-
-def random_file_from_folder(abs_path):
-    '''
-        Random file from given folder as a Django's ContentFile object
-
-        returns ContentFile object
-    '''
-    file_name = choice(os.listdir(abs_path))
-    content = open(os.path.join(abs_path, file_name), 'r').read()
-    if VERSION < (1, 4):
-        return ContentFile(content)
-    file_name = choice(os.listdir(abs_path))
-    return ContentFile(content, name=file_name)
-
-
-def random_html_color():
-    ''' Random color in HTML notation '''
-
-    return choice([
-        '#7289A6', '#485922', '#A67721', '#D99C2B', '#A64029', '#011640',
-        '#123273', '#1F628C', '#718C0F', '#88A61B', '#69374D', '#232326',
-        '#FF3F94', '#FF483F', '#F89E00', '#9F9F9F', '#7FCD74', '#AE74CD',
-    ])
-
-
-def placeholder_image(width, height, background_color=None,
-                      font_color='#FFFFFF', base_font_size=40, text_margin=20,
-                      font_path=None, image_format='png'):
-    '''
-        Generate image placeholder with text (eg. 200x300)
-        as a Django's ContentFile object
-
-        returns ContentFile object
-    '''
-
-    if background_color is None:
-        background_color = random_html_color()
-
-    if font_path is None:
-        dir = os.path.abspath(os.path.dirname(__file__))
-        font_path = os.path.join(dir, 'TTF', 'DejaVuSans.ttf')
-    msg = '%sx%s' % (width, height)
-
-    im = Image.new('RGBA', (width, height), background_color)
-    draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype(font_path, base_font_size)
-    w, h = draw.textsize(msg, font=font)
-
-    # adjust the text size to the size of the image
-    while w > width - text_margin or h > height - text_margin:
-        base_font_size -= 2
-        font = ImageFont.truetype(font_path, base_font_size)
-        w, h = draw.textsize(msg, font=font)
-
-    draw.text(
-        ((width - w) / 2, (height - h) / 2), msg, fill=font_color, font=font
-    )
-
-    tmp_content = StringIO()
-    im.save(tmp_content, format=image_format)
-
-    if VERSION < (1, 4):
-        return ContentFile(tmp_content.getvalue())
-    file_name = uuid.uuid4().__str__() + '.%s' % image_format
-    return ContentFile(tmp_content.getvalue(), name=file_name)
