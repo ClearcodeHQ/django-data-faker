@@ -13,7 +13,7 @@ setup(
         'Pillow>=2.2.1',
         'Django>=1.1',
         'model-mommy==1.2',
-        'fake-factory==0.2',
+        'fake-factory==0.3.1',
     ],
     include_package_data=True,
     keywords='django testing factory python',

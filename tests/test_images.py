@@ -18,12 +18,12 @@
 
 from django.test import TestCase
 
-from django_data_faker import placeholder_image
+from django_data_faker import fake
 
 
 class ImageGenerator(TestCase):
 
     def test_image_generator(self):
-        content_file = placeholder_image(100, 100)
+        content_file = fake.placeholder_image(100, 100)
         self.assertTrue('.png' in content_file.name)
         self.assertTrue(content_file.size > 0)

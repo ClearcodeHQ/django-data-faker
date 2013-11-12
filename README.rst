@@ -20,12 +20,18 @@ To install Django-data-faker you can use pip::
 Extra generators
 ----------------
 
+**Base import**
+
+.. code-block:: python
+
+    >>> from django_data_faker import fake
+
+
 **Url with username**
 
 .. code-block:: python
 
-    >>> from django_data_faker import url_with_username
-    >>> url_with_username()
+    >>> fake.url_with_username()
     'http://koeppledner.biz/curtis.lakin'
 
 
@@ -33,8 +39,7 @@ Extra generators
 
 .. code-block:: python
 
-    >>> from django_data_faker import facebook_url
-    >>> facebook_url()
+    >>> fake.facebook_url()
     'http://facebook.com/rchristiansen'
 
 
@@ -42,16 +47,14 @@ Extra generators
 
 .. code-block:: python
 
-    >>> from django_data_faker import twitter_url
-    >>> twitter_url()
+    >>> fake.twitter_url()
     'http://twitter.com/cummerata.norbert'
 
 **LinkedIn url**
 
 .. code-block:: python
 
-    >>> from django_data_faker import linkedin_url
-    >>> linkedin_url()
+    >>> fake.linkedin_url()
     'http://linkedin.com/pub/bweimann'
 
 
@@ -61,12 +64,11 @@ Extra generators
 
     # random avatar
 
-    from django_data_faker import random_file_from_folder
     from myapp.models import UserProfile
 
-    file_name, file_content = random_file_from_folder('/path/to/avatars/dir')
     user = UserProfile.objects.get(id=100)
-    user.avatar.save(file_name, file_content)
+    user.avatar = fake.random_file_from_folder('/path/to/avatars/dir')
+    user.save()
 
 
 **Generate image placeholder**
@@ -75,12 +77,11 @@ Extra generators
 
     # generate avatar placeholder
 
-    from django_data_faker import placeholder_image
     from myapp.models import UserProfile
 
-    file_name, file_content = placeholder_image(400, 200)
     user = UserProfile.objects.get(id=100)
-    user.avatar.save(file_name, file_content)
+    user.avatar = fake.placeholder_image(400, 200)
+    user.save()
 
 Example:
 
