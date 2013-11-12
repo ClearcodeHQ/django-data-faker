@@ -6,7 +6,7 @@ setup(
     description='Fake-factory to generate test data for Django models via model_mommy recipes.',
     author='Clearcode - The A Room',
     author_email='thearoom@clearcode.cc',
-    url='https://github.com/trojkat/django-data-faker',
+    url='https://github.com/ClearcodeHQ/django-data-faker',
     license='Lesser GPL',
     packages=['django_data_faker'],
     install_requires=[
