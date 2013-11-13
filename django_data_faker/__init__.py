@@ -47,15 +47,15 @@ class CustomProvider(BaseProvider):
 
 
     def facebook_url(self, username=None):
-        return url_with_username('http://facebook.com/', username)
+        return self.url_with_username('http://facebook.com/', username)
 
 
     def twitter_url(self, username=None):
-        return url_with_username('http://twitter.com/', username)
+        return self.url_with_username('http://twitter.com/', username)
 
 
     def linkedin_url(self, username=None):
-        return url_with_username('http://linkedin.com/pub/', username)
+        return self.url_with_username('http://linkedin.com/pub/', username)
 
 
     def random_file_from_folder(self, abs_path):

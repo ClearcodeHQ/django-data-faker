@@ -23,6 +23,34 @@ from django_data_faker import fake
 
 class ImageGenerator(TestCase):
 
+    def test_url_with_username(self):
+        username = fake.user_name()
+        url = fake.url_with_username(username=username)
+        self.assertTrue(username in url)
+
+    def test_facebook_url(self):
+        username = fake.user_name()
+        url = fake.facebook_url(username=username)
+        self.assertTrue(username in url)
+        self.assertTrue('facebook.com' in url)
+
+    def test_twitter_url(self):
+        username = fake.user_name()
+        url = fake.twitter_url(username=username)
+        self.assertTrue(username in url)
+        self.assertTrue('twitter.com' in url)
+
+    def test_linkedin_url(self):
+        username = fake.user_name()
+        url = fake.linkedin_url(username=username)
+        self.assertTrue(username in url)
+        self.assertTrue('linkedin.com' in url)
+
+    def test_random_html_color(self):
+        color = fake.random_html_color()
+        self.assertTrue('#' in color)
+        self.assertTrue(len(color) == 7)
+
     def test_image_generator(self):
         content_file = fake.placeholder_image(100, 100)
         self.assertTrue('.png' in content_file.name)
